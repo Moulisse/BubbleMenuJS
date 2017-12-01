@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <title>Bulle</title>
+
+    <script src="lib/angular/angular.min.js"></script>
+
+    <script src="app.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body ng-controller="MainController">
+
+<div class="navbar">
+
+        <div class="title">Bubble Menu</div>
+
+        <div ng-repeat="item in headMenu">
+            <div class="headMenuItem" ng-bind="item" ng-click="openMenu(item)"></div>
+        </div>
+
+</div>
+
+<div ng-repeat="Menu in items">
+    <div class="subMenuWrapper" ng-style="{'display': Menu.visible}">
+        <div ng-repeat="subItem in Menu.items">
+            <div class="subMenuItem" ng-bind="subItem"></div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
