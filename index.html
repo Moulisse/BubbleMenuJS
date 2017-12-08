@@ -17,8 +17,11 @@
 
         <div class="title">Bubble Menu</div>
 
-        <div ng-repeat="item in headMenu">
-            <div id="item-{{ $index }}" class="headMenuItem" ng-bind="item" ng-mouseenter="openMenu(item)" ng-click="setMode(item, 'normal')" ng-right-click="setMode(item, 'bubble')"></div>
+        <div ng-repeat="item in items track by $index">
+            <div id="item-{{ $index }}" ng-mouseenter="openMenu(item)" ng-click="setMode(item, 'normal')" ng-right-click="setMode(item, 'bubble')">
+                <div ng-if="item.name.includes('!')" class="headMenuItem active" ng-bind-template="{{item.name.replace('!','')}}"></div>
+                <div ng-if="!item.name.includes('!')" class="headMenuItem" ng-bind-template="{{item.name.replace('!','')}}"></div>
+            </div>
         </div>
 
 </div>
@@ -27,8 +30,8 @@
     <div class="subMenuWrapper" ng-style="{'margin-left': Menu.margin}" ng-show="Menu.visible">
         <div ng-repeat="subItem in Menu.items track by $index">
 
-            <div class="subMenuItem" ng-bind-template="{{subItem.replace('!','')}}" ng-if="subItem!='' && (!subItem.includes('!') || mode != 'bubble')" ng-click="fire(subItem)"></div>
-            <div class="subMenuItem active" ng-bind-template="{{subItem.replace('!','')}}" ng-if="subItem.includes('!') && mode == 'bubble'" ng-click="fire(subItem)"></div>
+            <div class="subMenuItem" ng-bind-template="{{subItem.replace('!','')}}" ng-if="subItem!='' && !subItem.includes('!')" ng-click="fire(subItem)"></div>
+            <div class="subMenuItem active" ng-bind-template="{{subItem.replace('!','')}}" ng-if="subItem.includes('!')" ng-click="fire(subItem)"></div>
 
             <div class="subMenuSeparator" ng-if="subItem==''"></div>
         </div>

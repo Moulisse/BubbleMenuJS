@@ -3,9 +3,7 @@ var app = angular.module('app', ['ngAnimate']);
 app.controller('MainController', ['$scope', '$window', function($scope, $window) {
     $scope.$window = $window;
 
-    $scope.headMenu = ['Fichier', 'Edition','Affichage', 'Format' ];
-
-    $scope.items = [{'name': 'Fichier', 'visible': false, 'margin': '264px', 'items': ['Partager...','', '!Nouveau', '!Ouvrir...', 'Renommer','Créer une copie...', 'Déplacer vers...', '!Placer dans la corbeille','',
+    $scope.items = [{'name': '!Fichier', 'visible': false, 'margin': '264px', 'items': ['Partager...','', '!Nouveau', '!Ouvrir...', 'Renommer','Créer une copie...', 'Déplacer vers...', '!Placer dans la corbeille','',
             'Historique des versions','','Télécharger au format','Publier sur le Web','Envoyer un e-mail aux collaborateurs...','Envoyer par e-mail en pièce jointe...','','Détails du document...','Langue',
             'Configuration de la page','!Imprimer']},
 
@@ -15,7 +13,7 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
         {'name': 'Affichage', 'visible': false, 'margin': '497px', 'items': ['Mise en page','Mode','','Afficher la règle','Afficher la barre d\'outil d\'équation','Affichier les suggestions orthographiques','',
                 'Mode compact','!Plein écran']},
 
-        {'name': 'Format', 'visible': false, 'margin': '647px', 'items': ['!Gras', '!Italique', '!Souligner','Barrer','Exposant','Indice','','Taille de police','','Recadrer l\'image','Options de l\'image...',
+        {'name': '!Format', 'visible': false, 'margin': '647px', 'items': ['!Gras', '!Italique', '!Souligner','Barrer','Exposant','Indice','','Taille de police','','Recadrer l\'image','Options de l\'image...',
                 'Remplacer l\'image','Reinitialiser l\'image']}];
 
     $scope.mode = "";
@@ -29,12 +27,12 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
         if ($scope.mode === "") return;
 
         for (var i = 0; i < $scope.items.length; i++) {
-            if ($scope.items[i].name === item) {
+            if ($scope.items[i].name === item.name) {
                 $scope.items[i].visible = true;
-                document.getElementById("item-"+i).className = "headMenuItem headMenuItemActive";
+                // document.getElementById("item-"+i).className = "headMenuItem headMenuItemActive";
             } else {
                 $scope.items[i].visible = false;
-                document.getElementById("item-"+i).className = "headMenuItem";
+                // document.getElementById("item-"+i).className = "headMenuItem";
             }
         }
     };
@@ -43,14 +41,14 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
         $scope.mode = "";
         for (var i = 0; i < $scope.items.length; i++) {
             $scope.items[i].visible = false;
-            document.getElementById("item-"+i).className = "headMenuItem";
+            // document.getElementById("item-"+i).className = "headMenuItem";
         }
     };
 
     $scope.selection = "";
 
-    $scope.fire = function(item) {
-        $scope.selection = item.toString().replace('!');
+    $scope.fire = function(item) {console.log(item);
+        $scope.selection = item.replace('!','');
         $scope.closeAll();
     };
 
