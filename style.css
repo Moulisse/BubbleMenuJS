@@ -54,7 +54,6 @@ body {
 }
 
 .subMenuWrapper {
-    transition:0.15s ease-out;
     box-shadow: 0 1px 10px -3px black;;
     font-size: 20px;
     -webkit-user-select: none;
@@ -77,20 +76,19 @@ body {
     font-size: 18px;
     font-family: "Arial", Arial, sans-serif;
 }
-.subMenuWrapper .subMenuItem:hover {
-    background-color: var(--item-hover-color);
-}
 
 .subMenuWrapper .subMenuSeparator {
     width: 100%;
     height: 1px;
-    margin-top: 5px;
-    margin-bottom: 5px;
     background-color: #d1d1d1;
 }
 
 .active {
     background-color: var(--item-active-color)!important;
+}
+
+.activeHover {
+    background-color: var(--item-active-hover-color)!important;
 }
 
 .mouseCircle {

@@ -3,6 +3,8 @@ var app = angular.module('app', ['ngAnimate']);
 app.controller('MainController', ['$scope', '$window', function($scope, $window) {
     $scope.$window = $window;
 
+    $scope.navbar = ['Fichier', 'Edition', 'Affichage', 'Format'];
+
     $scope.items = [{'name': '!Fichier', 'visible': false, 'margin': '264px', 'items': ['Partager...','', '!Nouveau', '!Ouvrir...', 'Renommer','Créer une copie...', 'Déplacer vers...', '!Placer dans la corbeille','',
             'Historique des versions','','Télécharger au format','Publier sur le Web','Envoyer un e-mail aux collaborateurs...','Envoyer par e-mail en pièce jointe...','','Détails du document...','Langue',
             'Configuration de la page','!Imprimer']},
@@ -18,50 +20,29 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
 
     $scope.mode = "";
     $scope.activeItems = [];
+    $scope.lastSelected = '';
 
     $scope.openMenu = function(item) {
-        $scope.activeItems.push(item);
+        $scope.activeItems=[item];
         $scope.changeMenu(item);
     };
 
     $scope.changeMenu = function(item) {
         if ($scope.activeItems.length <= 0) return;
 
-        $scope.activeItems = [item];
-        $scope.activableItems = $scope.getActivables();
-
         for (var i = 0; i < $scope.items.length; i++) {
-            if ($scope.items[i].name === item.name) {
-                $scope.items[i].visible = true;
-                // document.getElementById("item-"+i).className = "headMenuItem headMenuItemActive";
-            } else {
-                $scope.items[i].visible = false;
-                // document.getElementById("item-"+i).className = "headMenuItem";
-            }
+            $scope.items[i].visible = $scope.items[i].name.replace('!', '') === item;
         }
     };
-
-    $scope.getActivables = function() {
-        var res = ['!Fichier', '!Format'];
-
-        for (var i=0; i<$scope.activeItems.length; i++) {
-            for (var j=0; j<$scope.activeItems[i].items.length; j++) {
-                if ($scope.activeItems[i].items[j].includes('!'))
-                    res += $scope.activeItems[i].items[j];
-            }
-        }
-        return res;
-    };
-    $scope.activableItems = $scope.getActivables();
-
 
     $scope.closeAll = function() {
         $scope.mode = "";
+        $scope.isDragging = false;
         $scope.activeItems = [];
+        $scope.lastSelected = '';
         $scope.clickInit.x = -1;
         for (var i = 0; i < $scope.items.length; i++) {
             $scope.items[i].visible = false;
-            // document.getElementById("item-"+i).className = "headMenuItem";
         }
     };
 
@@ -72,18 +53,19 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
         $scope.closeAll();
     };
 
-    $scope.lClickBackground = function(event) {
-        $scope.closeAll();
-
-    };
-
-    $scope.rClickBackground = function(event) {
-        $scope.closeAll();
+    $scope.mouseUpBackground = function(item) {
+        if (typeof item === "undefined") {
+            if ($scope.isDragging)
+                $scope.fire($scope.activeItems[$scope.activeItems.length-1]);
+        } else {
+            $scope.fire(item);
+        }
+        $scope.closeAll()
     };
 
     $scope.clickInit = {x:-1,y:0};
 
-    $scope.mousepressedBackground = function(event) {
+    $scope.mouseDownBackground = function(event) {
         $scope.clickInit.x = event.clientX;
         $scope.clickInit.y = event.clientY;
     };
@@ -98,8 +80,11 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
 
         for (var i=0; i<array.length; i++) {
 
-            var p1 = {x:Math.min(Math.max(array[i].offsetLeft, x), array[i].offsetLeft+array[i].width) , y:Math.min(Math.max(array[i].offsetTop, y), array[i].offsetTop+array[i].height)};
-            var p2 = {x:Math.min(Math.max(item.offsetLeft, x), item.offsetLeft+item.offsetWidth) , y:Math.min(Math.max(item.offsetTop, y), item.offsetTop+item.offsetHeight)};
+            var pos1 = array[i].getBoundingClientRect();
+            var pos2 = item.getBoundingClientRect();
+
+            var p1 = {x:Math.min(Math.max(pos1.x, x), pos1.x+array[i].offsetWidth) , y:Math.min(Math.max(pos1.y, y), pos1.y+array[i].offsetHeight)};
+            var p2 = {x:Math.min(Math.max(pos2.x, x), pos2.x+item.offsetWidth) , y:Math.min(Math.max(pos2.y, y), pos2.y+item.offsetHeight)};
 
             if ($scope.distance({x:x, y:y}, p1) < $scope.distance({x:x, y:y}, p2)) {
                 item = array[i];
@@ -111,12 +96,31 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
 
     $scope.size = 150;
 
+    $scope.isDragging = false;
+
     $scope.mouseMoved = function(event) {
         if ($scope.clickInit.x !== -1) {
-            if ($scope.distance({x:event.clientX,y:event.clientY}, $scope.clickInit) > 10) {
+            if ($scope.distance({x:event.clientX,y:event.clientY}, $scope.clickInit) > 10)
+                $scope.isDragging = true;
+
+            if ($scope.isDragging) {
                 $scope.mode = 'bubble';
                 var item = $scope.getNearest(event.clientX, event.clientY, document.getElementsByClassName('active'));
-                $scope.size = $scope.distance({x:event.clientX,y:event.clientY}, {x:item.offsetLeft,y:item.offsetTop})
+
+                if ($scope.lastSelected !== item.innerHTML) {
+                    $scope.lastSelected = item.innerHTML;
+                    if ($scope.navbar.includes(item.innerHTML)) {
+                        $scope.openMenu(item.innerHTML);
+                    } else {
+                        if ($scope.activeItems.length >= 2) $scope.activeItems.splice($scope.activeItems.length-1,1);
+                        $scope.activeItems.push(item.innerHTML);
+                    }
+                }
+
+                var pos = item.getBoundingClientRect();
+
+                var p = {x:Math.min(Math.max(pos.x, event.clientX), pos.x+item.offsetWidth) , y:Math.min(Math.max(pos.y, event.clientY), pos.y+item.offsetHeight)};
+                $scope.size = 2*$scope.distance({x:event.clientX,y:event.clientY}, p);
             }
         }
 
