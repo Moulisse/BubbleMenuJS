@@ -48,9 +48,14 @@ body {
     background-color: var(--navbar-hover-color);
 }
 
+.navbar .headMenuItemActive {
+    background-color: white !important;
+    color: black;
+}
+
 .subMenuWrapper {
     transition:0.15s ease-out;
-    box-shadow: 0 1px 10px -3px #000000;;
+    box-shadow: 0 1px 10px -3px black;;
     font-size: 20px;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -59,7 +64,7 @@ body {
     position: absolute;
     background-color: white;
     display: table;
-    margin-top: 51px;
+    margin-top: 50px;
 }
 
 .subMenuWrapper.ng-hide {
@@ -68,7 +73,7 @@ body {
 
 .subMenuWrapper .subMenuItem {
     cursor: pointer;
-    padding: 3px;
+    padding: 3px 10px 3px 10px;
     font-size: 18px;
     font-family: "Arial", Arial, sans-serif;
 }
@@ -82,4 +87,18 @@ body {
     margin-top: 5px;
     margin-bottom: 5px;
     background-color: #d1d1d1;
+}
+
+.active {
+    background-color: var(--item-active-color)!important;
+}
+
+.mouseCircle {
+    position: fixed;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background-color: var(--navbar-hover-color);
+    opacity: 0.5;
+    pointer-events: none
 }
