@@ -15,34 +15,35 @@
 
 <div class="navbar">
 
-        <div class="title">Bubble Menu</div>
+    <div class="title">Bubble Menu</div>
 
-        <div ng-repeat="item in items track by $index">
-            <div id="item-{{ $index }}" ng-mouseenter="openMenu(item)" ng-click="setMode(item, 'normal')" ng-right-click="setMode(item, 'bubble')">
-                <div ng-if="item.name.includes('!')" class="headMenuItem active" ng-bind-template="{{item.name.replace('!','')}}"></div>
-                <div ng-if="!item.name.includes('!')" class="headMenuItem" ng-bind-template="{{item.name.replace('!','')}}"></div>
-            </div>
+    <div ng-repeat="item in items track by $index">
+        <div id="item-{{ $index }}" ng-mouseenter="changeMenu(item)" ng-click="openMenu(item)">
+            <div ng-if="item.name.includes('!')" class="headMenuItem active" ng-bind-template="{{item.name.replace('!','')}}"></div>
+            <div ng-if="!item.name.includes('!')" class="headMenuItem" ng-bind-template="{{item.name.replace('!','')}}"></div>
         </div>
-
+    </div>
 </div>
 
 <div ng-repeat="Menu in items track by $index" style="display: table">
-    <div class="subMenuWrapper" ng-style="{'margin-left': Menu.margin}" ng-show="Menu.visible">
+    <div class="subMenuWrapper" ng-style="{'margin-left': Menu.margin}" ng-if="Menu.visible">
         <div ng-repeat="subItem in Menu.items track by $index">
 
             <div class="subMenuItem" ng-bind-template="{{subItem.replace('!','')}}" ng-if="subItem!='' && !subItem.includes('!')" ng-click="fire(subItem)"></div>
-            <div class="subMenuItem active" ng-bind-template="{{subItem.replace('!','')}}" ng-if="subItem.includes('!')" ng-click="fire(subItem)"></div>
+            <div ng-if="subItem.includes('!')" ng-click="fire(subItem)">
+                <div class="subMenuItem active" ng-bind-template="{{subItem.replace('!','')}}"></div>
+            </div>
 
             <div class="subMenuSeparator" ng-if="subItem==''"></div>
         </div>
     </div>
 </div>
 
-<div style="background-color: #f6f6f6; width: 100%; height: 100vh;position: fixed;z-index: -5" ng-click="closeAll()">
+<div style="background-color: #f6f6f6; width: 100%; height: 100vh;position: fixed;z-index: -5" ng-click="lClickBackground($event)" ng-right-click="rClickBackground($event)" ng-mousedown="mousepressedBackground($event)">
     <div class="resultat" ng-bind="selection"></div>
 </div>
 
-<div id="mouseCircle" class="mouseCircle" ng-show="mode=='bubble'" ng-click="closeAll()"></div>
+<div id="mouseCircle" class="mouseCircle" ng-show="mode!=''"></div>
 
 </body>
 </html>

@@ -1,11 +1,15 @@
 :root {
-    --select-color: #4e8ed3;
-    --item-active-color: #ccd6ec;
-    --item-hover-color: #e5f3ff;
+    --item-active-hover-color: #ff96df;
+    --item-active-color: #ffb4e5;
+    --item-hover-color: #ffdff5;
 }
 
 body {
     margin: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .resultat {
@@ -63,7 +67,7 @@ body {
     margin-top: 50px;
 }
 
-.subMenuWrapper.ng-hide {
+.subMenuWrapper.ng-leave {
     opacity: 0;
 }
 
