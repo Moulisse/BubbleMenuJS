@@ -18,15 +18,24 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
         {'name': '!Format', 'visible': false, 'margin': '647px', 'items': ['!Gras', '!Italique', '!Souligner','Barrer','Exposant','Indice','','Taille de police','','Recadrer l\'image','Options de l\'image...',
                 'Remplacer l\'image','Reinitialiser l\'image']}];
 
+    /* mode de selection (affiche le cercle si different de "" */
     $scope.mode = "";
+
+    /* Quel menu est ouvert */
     $scope.activeItems = [];
     $scope.lastSelected = '';
 
+    /* texte affiché sous la navbar */
+    $scope.selection = "";
+
+
+    /* Active un menu */
     $scope.openMenu = function(item) {
         $scope.activeItems=[item];
         $scope.changeMenu(item);
     };
 
+    /* Est appelé losqu'un menu est ouvert et que la souris passe sur d'autre menus */
     $scope.changeMenu = function(item) {
         if ($scope.activeItems.length <= 0) return;
 
@@ -35,6 +44,7 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
         }
     };
 
+    /* ferme tous les menus */
     $scope.closeAll = function() {
         $scope.mode = "";
         $scope.isDragging = false;
@@ -46,13 +56,13 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
         }
     };
 
-    $scope.selection = "";
-
+    /* change le texte sous la navbar */
     $scope.fire = function(item) {
         $scope.selection = item.replace('!','');
         $scope.closeAll();
     };
 
+    /* listeners de la souris */
     $scope.mouseUpBackground = function(item) {
         if (typeof item === "undefined") {
             if ($scope.isDragging)
@@ -74,6 +84,7 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
         return Math.sqrt( Math.pow((a.x-b.x), 2) + Math.pow((a.y-b.y), 2) );
     };
 
+    /* trouve l'item activable le plus proche */
     $scope.getNearest = function(x,y,array) {
         if (array.size<=0) return;
         var item = array[0];
@@ -98,8 +109,10 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
 
     $scope.isDragging = false;
 
+    /* mets a jour le cercle et l'item activable le plus proche */
     $scope.mouseMoved = function(event) {
         if ($scope.clickInit.x !== -1) {
+            /* il faut bouger de 10px pour declancher le bubble */
             if ($scope.distance({x:event.clientX,y:event.clientY}, $scope.clickInit) > 10)
                 $scope.isDragging = true;
 
@@ -132,6 +145,8 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
     };
 }]);
 
+
+/* directive pour le clique droit */
 app.directive('ngRightClick', function($parse) {
     return function(scope, element, attrs) {
         var fn = $parse(attrs.ngRightClick);
