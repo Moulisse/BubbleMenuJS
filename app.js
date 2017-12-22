@@ -140,6 +140,7 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
                         if ($scope.activeItems.length >= 2) $scope.activeItems.splice($scope.activeItems.length-1,1);
                         $scope.activeItems.push(item.innerHTML);
                     }
+                    $scope.mode = "";
                 }
 
                 var pos = item.getBoundingClientRect();
