@@ -60,10 +60,7 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    position: absolute;
     background-color: white;
-    display: table;
-    margin-top: 50px;
 }
 
 .subMenuWrapper.ng-leave {

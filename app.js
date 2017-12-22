@@ -18,10 +18,10 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
         {'name': '!Format', 'visible': false, 'margin': '647px', 'items': ['!Gras', '!Italique', '!Souligner','Barrer','Exposant','Indice','','Taille de police','','Recadrer l\'image','Options de l\'image...',
                 'Remplacer l\'image','Reinitialiser l\'image']}];
 
-    /* mode de selection (affiche le cercle si different de "" */
+    /* mode de selection (affiche le cercle si different de "") */
     $scope.mode = "";
 
-    /* Quel menu est ouvert */
+    /* quel menu est ouvert */
     $scope.activeItems = [];
     $scope.lastSelected = '';
 
@@ -35,12 +35,23 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
         $scope.changeMenu(item);
     };
 
-    /* Est appelé losqu'un menu est ouvert et que la souris passe sur d'autre menus */
+    /* est appelé losqu'un menu est ouvert et que la souris passe sur d'autre menus */
     $scope.changeMenu = function(item) {
         if ($scope.activeItems.length <= 0) return;
 
         for (var i = 0; i < $scope.items.length; i++) {
             $scope.items[i].visible = $scope.items[i].name.replace('!', '') === item;
+            if (document.getElementById('menu-'+i) !== null){
+                switch ($scope.mode) {
+                    case '2' :
+                        document.getElementById('menu-'+i).style.left = $scope.clickInit.x.toString()+"px";
+                        document.getElementById('menu-'+i).style.top = $scope.clickInit.y.toString()+"px";
+                        break;
+                    default :
+                        document.getElementById('menu-'+i).style.left = $scope.items[i].margin;
+                        document.getElementById('menu-'+i).style.top = "50px";
+                }
+            }
         }
     };
 
@@ -109,15 +120,16 @@ app.controller('MainController', ['$scope', '$window', function($scope, $window)
 
     $scope.isDragging = false;
 
-    /* mets a jour le cercle et l'item activable le plus proche */
+    /* met a jour le cercle et l'item activable le plus proche */
     $scope.mouseMoved = function(event) {
         if ($scope.clickInit.x !== -1) {
             /* il faut bouger de 10px pour declancher le bubble */
-            if ($scope.distance({x:event.clientX,y:event.clientY}, $scope.clickInit) > 10)
+            if ($scope.distance({x:event.clientX,y:event.clientY}, $scope.clickInit) > 10){
                 $scope.isDragging = true;
+                $scope.mode = event.buttons.toString();
+            }
 
             if ($scope.isDragging) {
-                $scope.mode = 'bubble';
                 var item = $scope.getNearest(event.clientX, event.clientY, document.getElementsByClassName('active'));
 
                 if ($scope.lastSelected !== item.innerHTML) {

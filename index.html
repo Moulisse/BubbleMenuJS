@@ -27,20 +27,22 @@
 </div>
 
 <div ng-repeat="Menu in items track by $index" style="display: table">
-    <div class="subMenuWrapper" ng-style="{'left': Menu.margin}" ng-if="Menu.visible">
-        <div ng-repeat="subItem in Menu.items track by $index" ng-mousedown="mouseDownBackground($event)" ng-mouseup="mouseUpBackground(subItem)">
+    <div id="menu-{{$index}}" style="position: absolute;">
+         <div class="subMenuWrapper" ng-if="Menu.visible">
+             <div ng-repeat="subItem in Menu.items track by $index" ng-mousedown="mouseDownBackground($event)" ng-mouseup="mouseUpBackground(subItem)">
 
-            <div class="subMenuItem" ng-bind-template="{{subItem.replace('!','')}}" ng-if="subItem!='' && !subItem.includes('!')"></div>
-            <div ng-if="subItem.includes('!')" ng-click="fire(subItem)">
-                <div class="subMenuItem active" ng-bind-template="{{subItem.replace('!','')}}" ng-class="{'activeHover': activeItems.includes(subItem.replace('!',''))}"></div>
-            </div>
+                 <div class="subMenuItem" ng-bind-template="{{subItem.replace('!','')}}" ng-if="subItem!='' && !subItem.includes('!')"></div>
+                 <div ng-if="subItem.includes('!')" ng-click="fire(subItem)">
+                     <div class="subMenuItem active" ng-bind-template="{{subItem.replace('!','')}}" ng-class="{'activeHover': activeItems.includes(subItem.replace('!',''))}"></div>
+                 </div>
 
-            <div class="subMenuSeparator" ng-if="subItem==''"></div>
-        </div>
+                 <div class="subMenuSeparator" ng-if="subItem==''"></div>
+             </div>
+         </div>
     </div>
 </div>
 
-<div style="background-color: #f6f6f6; width: 100%; height: 100vh;position: fixed;z-index: -5" ng-mousedown="mouseDownBackground($event)" ng-mouseup="mouseUpBackground()">
+<div style="background-color: #f6f6f6; width: 100%; height: 100vh;position: fixed;z-index: -5" ng-mousedown="mouseDownBackground($event)" ng-mouseup="mouseUpBackground()" ng-right-click="">
     <div class="resultat" ng-bind="selection"></div>
 </div>
 
